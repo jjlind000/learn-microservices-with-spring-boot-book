@@ -1,0 +1,12 @@
+FOR POST, no POST endpoint so not verified: http -b :8080/challenges/random <<< '{"factorA": 52,"factorB": 59 }'
+FOR GET, DOESN'T WORK: http -b :8080/challenges/random -d '{"factorA": 52,"factorB": 59 }'
+WORKS: curl -X GET localhost:8080/challenges/random -d '{"factorA": 52,"factorB": 59 }'
+WORKS: http POST :8080/attempts factorA=58 factorB=92 userAlias=moises guess=5400
+WORKS: http POST :8080/attempts <<< '{"factorA":58, "factorB":92, "userAlias":"moises", "guess":5400 }'
+WORKS: curl -X POST localhost:8080/attempts -d '{"factorA":58, "factorB":92, "userAlias":"moises", "guess":5400 }' -H "Content-Type: application/json"
+
+curl -X POST localhost:8080/hellopost -H "Content-Type: application/json" -d '{"message" : "boo!"}'
+
+
+
+http PUT localhost:8080/user <<<'{ "user": { "name": "john", "age": 10 }}'
