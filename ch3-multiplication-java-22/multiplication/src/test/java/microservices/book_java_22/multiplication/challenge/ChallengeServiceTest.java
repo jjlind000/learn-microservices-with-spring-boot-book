@@ -1,5 +1,6 @@
 package microservices.book_java_22.multiplication.challenge;
 
+import microservices.book_java_22.multiplication.serviceclients.GamificationServiceRestClientUsingBean;
 import microservices.book_java_22.multiplication.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,13 +13,12 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 /**
  * There is an alternative implementation of these tests. You could use the
@@ -42,12 +42,12 @@ public class ChallengeServiceTest {
     @Mock
     private ChallengeAttempt challengeAttempt;
     private List<ChallengeAttempt> expected = Collections.singletonList(challengeAttempt);
+    //@Mock private GamificationServiceRestTemplateClient gameClient;
+    @Mock private GamificationServiceRestClientUsingBean gameClient;
 
     @BeforeEach
     public void setUp() {
-        challengeService = new ChallengeServiceImpl(userRepository, attemptRepository);
-
-
+        challengeService = new ChallengeServiceImpl(userRepository, attemptRepository, gameClient);
     }
 
     @Test
@@ -63,6 +63,7 @@ public class ChallengeServiceTest {
         then(resultAttempt.isCorrect()).isTrue();
         verify(userRepository).save(new User("john_doe"));   // userRepo is a MOCK therefore verifying BEHAVIOUR
         verify(attemptRepository).save(resultAttempt);               // attempt Repo is a MOCK therefore verifying BEHAVIOUR
+        verify(gameClient).sendAttempt(resultAttempt);
     }
 
     @Test
@@ -82,16 +83,20 @@ public class ChallengeServiceTest {
         then(resultAttempt.getUser()).isEqualTo(existingUser);
         verify(userRepository, never()).save(any());    // MOCK therefore verify BEHAVIOUR
         verify(attemptRepository).save(resultAttempt);  // MOCK therefore verify BEHAVIOUR
+        verify(gameClient).sendAttempt(resultAttempt);
     }
 
     @Test
     public void checkWrongAttemptTest() {
 // given
         ChallengeAttemptRequest attemptDTO = new ChallengeAttemptRequest(50, 60, "john_doe", 5000);
+        given(attemptRepository.save(any()))
+                .will(returnsFirstArg());
 // when
         ChallengeAttempt resultAttempt = challengeService.verifyAttempt(attemptDTO);
 // then
         then(resultAttempt.isCorrect()).isFalse(); // verifying STATE not BEHAVIOUR
+        verify(gameClient).sendAttempt(resultAttempt);
     }
 
 
