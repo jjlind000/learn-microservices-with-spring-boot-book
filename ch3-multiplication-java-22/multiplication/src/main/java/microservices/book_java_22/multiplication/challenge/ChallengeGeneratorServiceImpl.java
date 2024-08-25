@@ -29,9 +29,6 @@ public class ChallengeGeneratorServiceImpl implements ChallengeGeneratorService 
 
     private int next() {
         int nextInt = random.nextInt(MAXIMUM_FACTOR - MINIMUM_FACTOR);
-        System.out.println("nextInt = " + nextInt);
-        int toReturn = nextInt + MINIMUM_FACTOR;
-        System.out.println("toReturn = " + toReturn);
-        return toReturn;
+        return nextInt + MINIMUM_FACTOR;
     }
 }

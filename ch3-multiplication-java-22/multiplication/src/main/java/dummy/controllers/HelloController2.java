@@ -1,4 +1,4 @@
-package microservices.book_java_22.multiplication;
+package dummy.controllers;
 
 
 import org.slf4j.Logger;
