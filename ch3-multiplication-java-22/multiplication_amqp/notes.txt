@@ -1,0 +1,36 @@
+FOR POST, no POST endpoint so not verified: http -b :8080/challenges/random <<< '{"factorA": 52,"factorB": 59 }'
+FOR GET, DOESN'T WORK: http -b :8080/challenges/random -d '{"factorA": 52,"factorB": 59 }'
+WORKS: curl -X GET localhost:8080/challenges/random -d '{"factorA": 52,"factorB": 59 }'
+WORKS: http POST :8080/attempts factorA=58 factorB=92 userAlias=moises guess=5400
+WORKS: http POST :8080/attempts <<< '{"factorA":58, "factorB":92, "userAlias":"moises", "guess":5400 }'
+WORKS: curl -X POST localhost:8080/attempts -d '{"factorA":58, "factorB":92, "userAlias":"moises", "guess":5400 }' -H "Content-Type: application/json"
+
+WORKS: curl -X POST localhost:8080/hellopost -H "Content-Type: application/json" -d '{"message" : "boo!"}'
+
+WORKS:
+http POST :8080/attempts factorA=58 factorB=92 userAlias=ttelan guess=5503
+http ":8080/attempts/stats?userAlias=ttelan"
+
+
+http PUT localhost:8080/user <<<'{ "user": { "name": "john", "age": 10 }}'
+
+VITE/REACT:
+==========
+npm create vite@latest && cd vite-project && npm install && npm run dev
+
+GIT
+===
+create repo on github
+git init -b master
+git add .  #ETC
+git commit -m "blah"
+git remote add origin https://github.com/jjlind000/learn-microservices-with-spring-boot-book
+git push -u origin master
+
+
+in vite-project:
+    npm run build
+in spring-boot project:
+rm -rf  multiplication/src/main/resources/static/*
+cp -rv  ~/Documents/dev/vscode/workspaces/learn-microservices-with-spring-boot-book-react/ch4-minimal-react-fe/vite-project/dist/* multiplication/src/main/resources/static/
+page is at http://localhost:8080/index.html
